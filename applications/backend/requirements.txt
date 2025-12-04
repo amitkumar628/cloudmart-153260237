@@ -1,5 +1,4 @@
-fastapi 
-uvicorn 
-azure-cosmos 
-jinja2 
-python-multipart 
+fastapi
+uvicorn
+azure-cosmos
+python-dotenv

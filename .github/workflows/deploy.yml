@@ -1,0 +1,22 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Docker Login
+        run: |
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login cloudmartacr153260237.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
+      
+      - name: Build image
+        run: docker build -t cloudmartacr153260237.azurecr.io/cloudmart-backend:latest applications/backend/
+      
+      - name: Push image
+        run: docker push cloudmartacr153260237.azurecr.io/cloudmart-backend:latest

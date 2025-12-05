@@ -1,22 +1,24 @@
-name: Deploy to Azure
+name: Deploy to Azure Web App
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Docker Login
-        run: |
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login cloudmartacr153260237.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
-      
-      - name: Build image
-        run: docker build -t cloudmartacr153260237.azurecr.io/cloudmart-backend:latest applications/backend/
-      
-      - name: Push image
-        run: docker push cloudmartacr153260237.azurecr.io/cloudmart-backend:latest
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy container to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: cloudmart-backend-app-bteub3g5dmemateb
+          images: cloudmartacr153260237.azurecr.io/cloudmart-backend:latest

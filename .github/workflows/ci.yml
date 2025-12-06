@@ -1,27 +1,26 @@
-name: CI - Build and Push Backend Image
+name: CI - Build & Push Docker Image
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Login to Docker Hub
+    - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker Image
-      run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/cloudmart-backend-153260237:latest applications/backend
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/cloudmart-backend:latest ./applications/backend
 
-    - name: Push Image to Docker Hub
-      run: |
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/cloudmart-backend-153260237:latest
+    - name: Push Docker Image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/cloudmart-backend:latest
